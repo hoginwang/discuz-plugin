@@ -251,11 +251,11 @@ function space_domain($space) {
 	if($_G['setting']['allowspacedomain'] && $_G['setting']['domain']['root']['home']) {
 		space_merge($space, 'field_home');
 		if($space['domain']) {
-			$space['domainurl'] = 'http://'.$space['domain'].'.'.$_G['setting']['domain']['root']['home'];
+			$space['domainurl'] = $_G['scheme'].'://'.$space['domain'].'.'.$_G['setting']['domain']['root']['home'];
 		}
 	}
 	if(!empty($_G['setting']['domain']['app']['home'])) {
-		$space['domainurl'] = 'http://'.$_G['setting']['domain']['app']['home'].'/?'.$space['uid'];
+		$space['domainurl'] = $_G['scheme'].'://'.$_G['setting']['domain']['app']['home'].'/?'.$space['uid'];
 	} elseif(empty($space['domainurl'])) {
 		$space['domainurl'] = $_G['siteurl'].'?'.$space['uid'];
 	}
@@ -316,10 +316,6 @@ function sarray_rand($arr, $num=1) {
 }
 
 function my_showgift() {
-	global $_G, $space;
-	if($_G['setting']['my_showgift'] && $_G['my_userapp'][$_G['home_gift_appid']]) {
-		echo '<script language="javascript" type="text/javascript" src="http://gift.manyou-apps.com/recommend.js"></script>';
-	}
 }
 
 function getsiteurl() {
@@ -592,6 +588,48 @@ function getthread() {
 		}
 	}
 	return $threads;
+}
+
+function show_view() {
+	global $_G, $space;
+
+	if(!$space['self'] && $_G['uid']) {
+		$visitor = C::t('home_visitor')->fetch_by_uid_vuid($space['uid'], $_G['uid']);
+		$is_anonymous = empty($_G['cookie']['anonymous_visit_'.$_G['uid'].'_'.$space['uid']]) ? 0 : 1;
+		if(empty($visitor['dateline'])) {
+			$setarr = array(
+				'uid' => $space['uid'],
+				'vuid' => $_G['uid'],
+				'vusername' => $is_anonymous ? '' : $_G['username'],
+				'dateline' => $_G['timestamp']
+			);
+			C::t('home_visitor')->insert($setarr, false, true);
+			show_credit();
+		} else {
+			if($_G['timestamp'] - $visitor['dateline'] >= 300) {
+				C::t('home_visitor')->update_by_uid_vuid($space['uid'], $_G['uid'], array('dateline'=>$_G['timestamp'], 'vusername'=>$is_anonymous ? '' : $_G['username']));
+			}
+			if($_G['timestamp'] - $visitor['dateline'] >= 3600) {
+				show_credit();
+			}
+		}
+		updatecreditbyaction('visit', 0, array(), $space['uid']);
+	}
+}
+
+function show_credit() {
+	global $_G, $space;
+
+	$showinfo = C::t('home_show')->fetch($space['uid']);
+	if($showinfo['credit'] > 0) {
+		$showinfo['unitprice'] = intval($showinfo['unitprice']);
+		if($showinfo['credit'] <= $showinfo['unitprice']) {
+			notification_add($space['uid'], 'show', 'show_out');
+			C::t('home_show')->delete($space['uid']);
+		} else {
+			C::t('home_show')->update_credit_by_uid($space['uid'], -$showinfo['unitprice']);
+		}
+	}
 }
 
 ?>

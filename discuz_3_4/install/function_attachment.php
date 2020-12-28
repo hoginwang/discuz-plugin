@@ -36,19 +36,19 @@ function attachtype($type, $returnval = 'html') {
 			$typeid = 13;
 		} elseif(preg_match("/pdf|^pdf\t/", $type)) {
 			$typeid = 12;
-		} elseif(preg_match("/image|^(jpg|gif|png|bmp)\t/", $type)) {
+		} elseif(preg_match("/image|^(jpg|webp|jpeg|heic|gif|png)\t/", $type)) {
 			$typeid = 11;
 		} elseif(preg_match("/flash|^(swf|fla|flv|swi)\t/", $type)) {
 			$typeid = 10;
-		} elseif(preg_match("/audio|video|^(wav|mid|mp3|m3u|wma|asf|asx|vqf|mpg|mpeg|avi|wmv)\t/", $type)) {
+		} elseif(preg_match("/audio|video|^(wav|mid|mp3|m3u|wma|asf|asx|vqf|mpg|mpeg|avi|wmv|mov|mp4|m4a|m4v|3gp|ogv|ogg|webm|weba|aac|flac)\t/", $type)) {
 			$typeid = 9;
 		} elseif(preg_match("/real|^(ra|rm|rv)\t/", $type)) {
 			$typeid = 8;
 		} elseif(preg_match("/htm|^(php|js|pl|cgi|asp)\t/", $type)) {
 			$typeid = 7;
-		} elseif(preg_match("/text|^(txt|rtf|wri|chm)\t/", $type)) {
+		} elseif(preg_match("/text|^(txt|md|rtf|wri|chm)\t/", $type)) {
 			$typeid = 6;
-		} elseif(preg_match("/word|powerpoint|^(doc|ppt)\t/", $type)) {
+		} elseif(preg_match("/word|powerpoint|^(doc|docx|xls|xlsx|pptx|ppt|csv|tsv|odt|ods|odp)\t/", $type)) {
 			$typeid = 5;
 		} elseif(preg_match("/^rar\t/", $type)) {
 			$typeid = 4;
@@ -118,6 +118,9 @@ function parseattach($attachpids, $attachtags, &$postlist, $skipaids = array()) 
 				|| ($postlist[$attach['pid']]['groupid'] == 4 || $postlist[$attach['pid']]['groupid'] == 5) || $postlist[$attach['pid']]['status'] == -1 || $postlist[$attach['pid']]['memberstatus'])
 				|| $_G['adminid'] != 1 && $postlist[$attach['pid']]['status'] & 1 || $postlist[$attach['pid']]['first'] && $_G['forum_threadpay'];
 		if(!$hideattachs) {
+			if(defined('IN_MOBILE_API')) {
+				$attach['aidencode'] = packaids($attach);
+			}
 			$postlist[$attach['pid']]['attachments'][$attach['aid']] = $attach;
 		}
 		if(!defined('IN_MOBILE_API') && !empty($attachtags[$attach['pid']]) && is_array($attachtags[$attach['pid']]) && in_array($attach['aid'], $attachtags[$attach['pid']])) {

@@ -89,22 +89,33 @@ function parseattachmedia($attach) {
 	$attachurl = 'attach://'.$attach['aid'].'.'.$attach['ext'];
 	switch(strtolower($attach['ext'])) {
 		case 'mp3':
+		case 'm4a':
 		case 'wma':
 		case 'ra':
 		case 'ram':
 		case 'wav':
 		case 'mid':
+		case 'ogg':
+		case 'aac':
+		case 'flac':
+		case 'weba':
 			return '[audio]'.$attachurl.'[/audio]';
 		case 'wmv':
 		case 'rm':
 		case 'rmvb':
 		case 'avi':
 		case 'asf':
+		case 'asx':
 		case 'mpg':
 		case 'mpeg':
 		case 'mov':
 		case 'flv':
 		case 'swf':
+		case 'mp4':
+		case 'm4v':
+		case '3gp':
+		case 'ogv':
+		case 'webm':
 			return '[media='.$attach['ext'].',400,300]'.$attachurl.'[/media]';
 		default:
 			return;
@@ -360,7 +371,7 @@ function checkmaxperhour($type) {
 
 function checkpost($subject, $message, $special = 0) {
 	global $_G;
-	if(dstrlen($subject) > 80) {
+	if(dstrlen($subject) > 200) {
 		return 'post_subject_toolong';
 	}
 	if(!$_G['group']['disablepostctrl'] && !$special) {
@@ -573,7 +584,7 @@ function messagecutstr($str, $length = 0, $dot = ' ...') {
 	}
 	$language = lang('forum/misc');
 	loadcache(array('bbcodes_display', 'bbcodes', 'smileycodes', 'smilies', 'smileytypes', 'domainwhitelist'));
-	$bbcodes = 'b|i|u|p|color|size|font|align|list|indent|float';
+	$bbcodes = 'b|i|u|p|color|backcolor|size|font|align|list|indent|float';
 	$bbcodesclear = 'email|code|free|table|tr|td|img|swf|flash|attach|media|audio|groupid|payto'.($_G['cache']['bbcodes_display'][$_G['groupid']] ? '|'.implode('|', array_keys($_G['cache']['bbcodes_display'][$_G['groupid']])) : '');
 	$str = strip_tags(preg_replace(array(
 			"/\[hide=?\d*\](.*?)\[\/hide\]/is",
