@@ -175,11 +175,11 @@ function upyun_get_file_md5() {
         case 'X3.4':
 			return array(
 				'discuz_ftp.php' => 'd2343fb3bea0e16b574a1ea601a9f871',
-				'forum_attachment.php' => '016a8b55f747a5855ed60b0bb0ba908a',
+				'forum_attachment.php' => 'be8e161c152a7929bfd6d44a5d198bf2',
 				'forum_image.php' => '044aabe6823ceff3bd01b082776d5fe5',
-				'function_attachment.php' => '9d5abc171193da52e2cebcf12f17500a',
-				'function_home.php' => '7785b5a8a332617b6f929b17f6bb7250',
-				'function_post.php' => '21f02c43de97c3685e774fd8b7f7ac9e',
+				'function_attachment.php' => '0905b57ab25fa1a5deadd718a501f697',
+				'function_home.php' => 'c7b201f1fbbee7b2d9f3e9c06277cc61',
+				'function_post.php' => '61be0dbac27f8297a4cd5a0256fc952c',
 				'portal_attachment.php' => 'e5fc1bbd71d087e81243f45e61219d50',
 			);
             break;
