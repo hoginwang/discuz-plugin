@@ -1,4 +1,4 @@
-# Discuz Plugin For UPYUN (自修改版本)
+# 又拍云Discuz插件 Discuz Plugin For UPYUN (自修改版本)
  支持 Discuz 版本：`X3` `X3.1` `X3.2` `X3.3` `X3.4`
  
 ### 特性
